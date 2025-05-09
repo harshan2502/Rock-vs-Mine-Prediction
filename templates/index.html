@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock or Mine Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: 500px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+            margin-bottom: 20px;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .prediction {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+        }
+        .sample-buttons {
+            margin-top: 20px;
+        }
+        .sample-buttons button {
+            padding: 10px 20px;
+            font-size: 14px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 5px;
+        }
+        .sample-buttons button:hover {
+            background-color: #ddd;
+        }
+    </style>
+    <script>
+        // Function to prevent more than 60 values
+        function limitInput() {
+            // Get the input text box
+            var inputBox = document.getElementById('features');
+            
+            // Split the input into an array by commas
+            var values = inputBox.value.split(',');
+
+            // If there are more than 60 values, remove the last value
+            if (values.length > 60) {
+                values.pop();  // Remove the last value
+                inputBox.value = values.join(',');  // Update the input field
+            }
+        }
+
+        // Function to set sample values for Rock
+        function setRockSample() {
+            var rockSample = "0.0203,0.0371,0.0428,0.0207,0.0954,0.0983,0.0987,0.1539,0.1601,0.3109,0.2111,0.1609,0.1582,0.2235,0.0645,0.066,0.2273,0.3109,0.2991,0.5078,0.4797,0.5786,0.5078,0.5078,0.4234,0.404,0.3709,0.3664,0.364,0.3258,0.3271,0.2771,0.3034,0.2701,0.2469,0.2135,0.2116,0.1626,0.1202,0.1204,0.0915,0.0901,0.0837,0.0743,0.0641,0.0591,0.0594,0.0308,0.0167,0.0135,0.0093,0.0122,0.0103,0.0085,0.0073,0.005,0.0046,0.0043,0.0035,0.789";
+            document.getElementById('features').value = rockSample;
+        }
+
+        // Function to set sample values for Mine
+        function setMineSample() {
+            var mineSample = "0.0235, 0.0421, 0.0518, 0.0327, 0.0614, 0.0745, 0.0852, 0.0917, 0.1039, 0.1155, 0.1244, 0.1382, 0.1509, 0.1628, 0.1712, 0.1814, 0.1964, 0.2061, 0.2187, 0.2304, 0.2425, 0.2531, 0.2638, 0.2756, 0.2862, 0.2981, 0.3093, 0.3187, 0.3274, 0.3359, 0.3462, 0.3575, 0.3667, 0.3764, 0.3863, 0.3951, 0.4061, 0.4168, 0.4272, 0.4383, 0.4491, 0.4596, 0.4701, 0.4817, 0.4935, 0.5042, 0.5151, 0.5257, 0.5374, 0.5479,0.5581, 0.5686, 0.5785, 0.5892, 0.5988, 0.6094, 0.6191, 0.6294, 0.6392, 0.6498";
+            document.getElementById('features').value = mineSample;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Predict Rock or Mine</h1>
+        <form method="POST" action="/predict">
+            <label for="features">Enter 60 feature values (comma-separated):</label><br><br>
+            <textarea id="features" name="features" rows="10" cols="50" oninput="limitInput()" placeholder="Enter 60 feature values separated by commas"></textarea><br><br>
+            <div class="sample-buttons">
+                <button type="button" onclick="setRockSample()">Sample Rock Values</button>
+                <button type="button" onclick="setMineSample()">Sample Mine Values</button>
+            </div><br><br>
+            <input type="submit" value="Predict">
+        </form>
+        <br>
+        <div class="prediction">{{ prediction_text }}</div>
+    </div>
+</body>
+</html>
